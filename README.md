@@ -56,7 +56,17 @@ pytest -v
 
 ## 3. Simulación
 
-Salida (pegar aquí la salida real de tu terminal):
+Comando: `python original/sevensegdec.py --simulation --table tabla.txt`
+
+Salida (también guardada en [`salida_simulacion.txt`](salida_simulacion.txt)):
+
+```
+<class 'myhdl.StopSimulation'>: No more events
+Simulation done.
+Conversion done (VHDL).
+```
+
+La primera línea es el aviso normal de MyHDL al terminar: el testbench recorrió las 16 entradas y no quedan más eventos. No aparece ningún `ERROR`, lo que indica que `sseg` coincidió con la tabla en los 16 casos.
 
 ```
 Simulation done.
