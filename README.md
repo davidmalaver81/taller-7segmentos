@@ -76,10 +76,15 @@ Conversion done (VHDL).
 4. Comprueba 3 casos con tu tabla (por ejemplo `bcd=1` → `0110000`, `bcd=6` → `1011111`, `bcd=15` → `1111000`) y adjunta una captura de cada uno.
 
 ## 4. HDL generado
-Ver `hdl/sevensegdec_nexys.vhd` (o `.v`). El diseño convertido es `sevensegdec_nexys`: envuelve al decodificador y además conecta `bcd` a `bcdled` (LEDs) y fija `ssanodes = 11111110` para encender solo el primer display de la Nexys4 DDR.
+Ver [`hdl/sevensegdec_nexys.vhd`](hdl/sevensegdec_nexys.vhd) (generado con MyHDL 0.11.52).
 
-**De LUT a lógica combinacional.** `ssegout.next = decod_table[int(bcd)]` se convierte en un proceso sensible solo a `bcd` con una estructura `case`/tabla: cada entrada de la tabla es una rama que asigna un patrón de 7 bits. Un segundo proceso combinacional aplica la inversión según `invert`. No hay reloj ni registros: el sintetizador toma esa tabla de verdad y cada bit de `sseg` queda como una función booleana de los 4 bits de `bcd` (una LUT de 4 entradas en la FPGA).
-> Revisa tu archivo generado y ajusta esta explicación a lo que realmente ves en él.
+**Interfaz.** La entidad `sevensegdec_nexys` tiene como entradas `bcd` (4 bits) e `invert`, y como salidas `sseg` (7 bits), `bcdled` (4 bits) y `ssanodes` (8 bits). `invert` era un parámetro en la simulación, pero en el HDL es un puerto de entrada (en la Nexys4 DDR se puede conectar a un interruptor).
+
+**De LUT a lógica combinacional.**
+- `decod_table[int(bcd)]` se convirtió en el proceso `sevensegdec1_logic`, sensible únicamente a `bcd`. Contiene un `case to_integer(bcd)` con una rama por cada línea de `tabla.txt`; la última (entrada 15) se emite como `when others`.
+- No hay reloj ni registros: la salida depende solo de la entrada actual. Por eso es lógica combinacional, y cada bit de `ssegout` es una función booleana de los 4 bits de `bcd`. Una herramienta de síntesis la implementa como una LUT de 4 entradas por bit.
+- El proceso `sevensegdec1_invertproc` (sensible a `ssegout` e `invert`) deja pasar la señal tal cual o la niega con `not`, según `invert`.
+- `bcdled <= bcd` copia la entrada a los LEDs y `ssanodes <= to_unsigned(254, 8)` fija `11111110`: solo se enciende el primer display, porque los ánodos se activan con 0.
 
 ## 5. Pruebas unitarias
 `test_sevensegdec.py` usa **pytest** sobre `sevensegdec.py` (versión modificada). Cambios respecto al original: el testbench ya no compara contra la tabla, solo genera estímulos y devuelve las salidas (`simulate()`), y la conversión a HDL se separó en `convert()`. Las pruebas:
