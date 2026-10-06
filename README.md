@@ -52,7 +52,7 @@ python original/sevensegdec.py --simulation --table tabla.txt --verilog
 # Pruebas unitarias (script modificado)
 pytest -v
 ```
-> Pega aquí el comando **exacto** que ejecutaste. Los archivos se crean en el directorio actual: `sevensegdec_nexys.vhd` (o `.v`), `pck_myhdl_011.vhd` (solo VHDL) y `sevensegdec_tb.vcd`. Verifica los nombres con `ls` y muévelos a `hdl/`.
+
 
 ## 3. Simulación
 
