@@ -80,10 +80,9 @@ Conversion done (VHDL).
 **Qué representan los 7 bits de `sseg`.** Un bit por segmento en orden `abcdefg`: `a` es el MSB (bit 6) y `g` el LSB (bit 0). Un 1 enciende el segmento (lógica positiva; con `--invert` se invierte para displays de lógica negativa). Ejemplo: `0110000` = segmentos b y c = "1".
 
 ### Cómo leer el VCD (GTKWave / vc.drom.io)
-1. Abre `sevensegdec_tb.vcd` y agrega `bcd_tb` y `sseg_tb`.
-2. Muestra `bcd_tb` en decimal y `sseg_tb` en binario.
-3. Observa 16 escalones de 10 unidades de tiempo: `bcd_tb` sube de 0 a 15 y `sseg_tb` cambia al mismo tiempo (como mucho un delta de simulación), sin reloj, porque es lógica combinacional.
-4. Comprueba 3 casos con tu tabla (por ejemplo `bcd=1` → `0110000`, `bcd=6` → `1011111`, `bcd=15` → `1111000`) y adjunta una captura de cada uno.
+![Forma de onda completa](img/vcd_completo.png)
+
+El visor muestra `bcd_tb` recorriendo 0 a f (hex) en pasos de 10 ns y `sseg_tb` cambiando en el mismo instante, sin reloj: es lógica combinacional. Los valores (en hexadecimal) coinciden con `tabla.txt`; por ejemplo `bcd=1` da `30` (`0110000`, segmentos b y c), `bcd=6` da `5f` (`1011111`, 6 cerrado) y `bcd=f` da `78` (`1111000`). Dentro del decodificador, `ssegout` (salida de la LUT) y `sseg` valen lo mismo porque `invert` está apagado.
 
 ## 4. HDL generado
 Ver [`hdl/sevensegdec_nexys.vhd`](hdl/sevensegdec_nexys.vhd) (generado con MyHDL 0.11.52).
