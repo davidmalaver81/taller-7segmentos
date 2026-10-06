@@ -68,10 +68,7 @@ Conversion done (VHDL).
 
 La primera línea es el aviso normal de MyHDL al terminar: el testbench recorrió las 16 entradas y no quedan más eventos. No aparece ningún `ERROR`, lo que indica que `sseg` coincidió con la tabla en los 16 casos.
 
-```
-Simulation done.
-Conversion done (VHDL).
-```
+
 
 **Qué verifica el testbench.** `sevensegdec_tb` recorre las 16 entradas de `bcd` (0 a 15), espera 10 unidades de tiempo en cada una para que la lógica combinacional se estabilice, lee `sseg` y lo compara con la entrada correspondiente de la tabla (`decod_table[bcd]`).
 
